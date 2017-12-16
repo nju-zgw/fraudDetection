@@ -1,4 +1,4 @@
-mport numpy as np
+import numpy as np
 import matplotlib.pyplot as plt
 import math
 import pandas as pd
@@ -48,45 +48,6 @@ def merge():
     df_per = pd.read_csv(f_per)
 
 
-
-
-
-def main():
-   dtype_app = {'loan_key': str,
-                'user_key': str,
-                'mobile': str,
-                'idno': str,
- #   names.setdefault('sms', names_sms)
-
-    path_app = os.path.join(filepath, 'application')
-    path_per = os.path.join(filepath, 'performance')
- #   path_call = os.path.join(filepath, 'callrec')
- #   path_sms = os.path.join(filepath, 'sms')
-
-    paths={}
-    paths.setdefault('application', path_app)
-    paths.setdefault('performance', path_per)
- #   paths.setdefault('call', path_call)
- #   paths.setdefault('sms', path_sms)
-
-    filename = os.path.join(paths[name], '00000{}_0'.format(id))
-    if not os.path.isfile(filename):
-        print filename
-        print 'not exist!'
-        return None
-    df = pd.read_csv(filename, sep='    ', header=None, names=names[name])
-    return df
-
-def merge():
-    f_app = os.path.join('..', 'data', 'thunetwork', 'application', 'app.csv')
-    f_per = os.path.join('..', 'data', 'thunetwork', 'performance', 'per.csv')
-    df_app = pd.read_csv(f_app)
-    df_per = pd.read_csv(f_per)
-
-
-
-
-
 def main():
    dtype_app = {'loan_key': str,
                 'user_key': str,
@@ -117,7 +78,7 @@ def main():
    f_df_app = os.path.join('..', 'data', 'thunetwork', 'fraudDetection','data', 'app.csv')
 
    f_df_per = os.path.join('..', 'data', 'thunetwork', 'fraudDetection','data', 'per.csv')
-   df_app.to_csv(f_df_app,index=True.sep=',')
+   df_app.to_csv(f_df_app, index=True, sep=',')
  # df_loan.to_csv(f_df_info, index=True, sep=',')
 
    # name = 'application'
