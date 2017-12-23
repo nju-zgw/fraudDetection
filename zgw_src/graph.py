@@ -1,47 +1,46 @@
 import networkx as nx
 import pandas as pd
 import os
+import time
+import pickle
 
-def loadData(name ,id):
-    names_call = ['timestamp', 'idno', 'start_time', 'area', 'mode', 'to_mobile', 'mobile', 'duration', 'type',
-                  'total_fee', 'carrier_code', 'normal_fee', 'roaming_fee']
-    names_app = ['loan_key', 'user_key', 'mobile', 'idno', 'emit_amt', 'emit_time', 'is_final_passed',
-                 'final_verify_time']
-    names_per = ['loan_key', 'idno_prefix', 'mobile', 'person1', 'person2', 'final_verify_time', 'ip', 'latitude',
-                 'logitude', 'due_date', 'payoff_time']
-    names_sms = ['timestamp', 'idno', 'start_time', 'area', 'target_phone', 'mode', 'infor_type', 'business_name',
-                 'total_fee', 'user_phone']
 
-    names = {}
-    names.setdefault('application', names_app)
-    names.setdefault('performance', names_per)
-    names.setdefault('call', names_call)
-    names.setdefault('sms', names_sms)
+def create_graph():
+    edges = []
 
-    filepath = os.path.join('/home', 'thunetwork', 'data', 'thunetwork')
+    for i in range(0, 7):
+        filename = '../../data/preprocess/callrec_{}'.format(i)
+        df = pd.read_csv(filename)
 
-    path_app = os.path.join(filepath, 'application')
-    path_per = os.path.join(filepath, 'performance')
-    path_call = os.path.join(filepath, 'callrec')
-    path_sms = os.path.join(filepath, 'sms')
+        for k in range(1000):
+            try:
+                row = df.iloc[k]
+                idno = str(row.idno)
+                mobile = str(row.mobile)
+                to_mobile = str(row.to_mobile)
+                mode = int(row['mode'])
+                stime = str(row.start_time)
+                stime = time.mktime(time.strptime(stime, '%Y-%m-%d %H:%M:%S'))
+                duration = int(row.duration)
 
-    paths = {}
-    paths.setdefault('application', path_app)
-    paths.setdefault('performance', path_per)
-    paths.setdefault('call', path_call)
-    paths.setdefault('sms', path_sms)
+                if mode == '1':
+                    edge = (mobile, to_mobile)
+                elif mode == '2':
+                    edge = (to_mobile, mobile)
 
-    filename = os.path.join(paths[name], '00000{}_0'.format(id))
-    if not os.path.isfile(filename):
-        print filename
-        print 'not exist!'
-        return None
-    df = pd.read_csv(filename, sep='    ', header=None, names=names[name])
-    return df
+                edges.append(edge)
 
-if __name__=="__main__":
-    df = loadData('call',0);
-    print df[1:10,]
+            except Exception as e:
+                print(e)
+                continue
+
+    pickle.dump(edges, open("callrec_graph", 'wb'), True)
+
+
+if __name__ == "__main__":
+    create_graph()
+    print('Done!')
+
 
     # G = nx.Graph() # or DiGraph, MultiGraph, MultiDiGraph, etc
     # G = nx.Graph(name='my graph')
