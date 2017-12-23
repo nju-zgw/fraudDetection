@@ -1,4 +1,4 @@
-import networkx as nx
+#import networkx as nx
 import pandas as pd
 import os
 
@@ -36,12 +36,28 @@ def loadData(name ,id):
         print filename
         print 'not exist!'
         return None
-    df = pd.read_csv(filename, sep='    ', header=None, names=names[name])
+    df = pd.read_csv(filename, sep='	', header=None, names=names[name],low_memory=False)
+
     return df
 
 if __name__=="__main__":
-    df = loadData('call',0);
-    print df[1:10,]
+    #df = loadData('call',0);
+   # print df[1:10,]
+    filepath = os.path.join('/home', 'thunetwork', 'data', 'thunetwork', 'callrec','000000_0')
+    file = open(filepath)
+    count = 0
+    for i in range(0,1):
+	filepath = os.path.join('/home', 'thunetwork', 'data', 'thunetwork', 'callrec','00000{}_0'.format(i))
+    	file = open(filepath)
+    	while 1:
+    	    lines = file.readlines(1000)
+    	    if not lines:
+                break
+    	    for line in lines:
+		line.replace('\n','')
+                line.split('\t')
+                count=count+1
+    print count
 
     # G = nx.Graph() # or DiGraph, MultiGraph, MultiDiGraph, etc
     # G = nx.Graph(name='my graph')
