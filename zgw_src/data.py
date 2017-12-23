@@ -79,6 +79,7 @@ def main():
 
    f_df_per = os.path.join('..', 'data', 'thunetwork', 'fraudDetection','data', 'per.csv')
    df_app.to_csv(f_df_app, index=True, sep=',')
+   df_app.to_csv(f_df_per, index=True, sep=',')
  # df_loan.to_csv(f_df_info, index=True, sep=',')
 
    # name = 'application'
