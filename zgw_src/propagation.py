@@ -1,17 +1,19 @@
 import networkx as nx
 import Queue
+import pandas as pd
 import os
+from pandas import Series
+
 
 
 def init(queue,G):
+    df = pd.read_csv('graph_pre.csv')
+    fraud_dict = Series(df.label.values, index=df.no).to_dict()
 
-    queue.put(1)
-    queue.put(27)
-    queue.put(714636)
-
-    G.add_nodes_from([1], belief=1)
-    G.add_nodes_from([27], belief=1)
-    G.add_nodes_from([714636], belief=1)
+    for node in G.nodes:
+        if node in fraud_dict[node] and fraud_dict[node]>0:
+            G.add_nodes_from([node], belief=fraud_dict[node])
+            queue.put(node)
 
 def broadcast(filename):
     G = nx.DiGraph() # or DiGraph, MultiGraph, MultiDiGraph, etc
@@ -22,7 +24,7 @@ def broadcast(filename):
             item = line.split()
             G.add_edge(int(item[0]),int(item[1]))
 
-    pr = nx.pagerank(G, alpha=0.85)
+   # pr = nx.pagerank(G, alpha=0.85)
     init(queue,G)
 
     alpha = 2.0
